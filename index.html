@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GaDoCort - Barbearia Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Reset e Estilos Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #0a0a0a;
+            color: #f0f0f0;
+            line-height: 1.6;
+            overflow-x: hidden;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Efeito de Partículas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: rgba(200, 200, 200, 0.5);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+        
+        /* Cabeçalho Luxuoso */
+        header {
+            background: rgba(10, 10, 10, 0.9);
+            color: white;
+            padding: 1.2rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .scrolled {
+            background: rgba(5, 5, 5, 0.98);
+            box-shadow: 0 4px 30px rgba(255, 255, 255, 0.05);
+            padding: 0.8rem 2rem;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .logo .ga {
+            background: linear-gradient(to right, #c0b7a8, #e8e6e1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .logo .do {
+            background: linear-gradient(to right, #fafbfc, #fafbfc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0 2px;
+        }
+        
+        .logo .cort {
+            background: linear-gradient(to right, #e8e6e1, #c0b7a8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .logo:hover {
+            transform: scale(1.02);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Navegação Premium */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+            position: relative;
+        }
+        
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            padding: 0.5rem 0;
+            font-size: 0.95rem;
+        }
+        
+        .nav-links a:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(to right, #c0b7a8, #e8e6e1);
+            transition: width 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .admin-link {
+            background: linear-gradient(to right, #c0b7a8, #e8e6e1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .social-header {
+            display: flex;
+            gap: 15px;
+            margin-left: 2rem;
+        }
+        
+        .social-header a {
+            color: #e0e0e0;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-header a:hover {
+            color: #ffffff;
+            transform: translateY(-3px) scale(1.1);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Menu Hamburguer Estilizado */
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1001;
+        }
+        
+        .menu-toggle i {
+            font-size: 1.8rem;
+            color: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-toggle:hover i {
+            color: #ffffff;
+            transform: rotate(90deg);
+        }
+        
+        /* Hero Section - Design Ultra Premium */
+        .hero {
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .video-background {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    z-index: -2;
+    overflow: hidden;
+}
+
+.video-background video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center -10%; /* Ajuste este valor (70% mostra mais a parte de baixo) */
+    opacity: 0.7;
+}
+
+/* Ajuste para desktop */
+@media (min-width: 1768px) {
+    .video-background video {
+        object-position: center 20%; /* Desce mais no desktop */
+    }
+}
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.9) 100%);
+            z-index: -1;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to top, #0a0a0a, transparent);
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+        
+        .hero h1 {
+            font-size: 3.8rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: fadeIn 1.5s ease;
+            background: linear-gradient(to right, #c0b7a8, #e8e6e1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+            font-weight: 800;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            font-weight: 300;
+            animation: fadeIn 2s ease;
+            color: #e0e0e0;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #c0b7a8 0%, #e8e6e1 100%);
+            color: #111;
+            border: none;
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            border-radius: 50px;
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 2.5s ease;
+            z-index: 1;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(255, 255, 255, 0.3);
+            color: #111;
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 100%);
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+        
+        .btn:hover::before {
+            background: linear-gradient(135deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.1) 100%);
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%, -50%);
+            transform-origin: 50% 50%;
+            z-index: -1;
+        }
+        
+        .btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+        
+        /* Seção de Serviços - Design Futurista */
+        .services {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            position: relative;
+            color: white;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, #c0b7a8, #e8e6e1);
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .service-card {
+            background: rgba(20, 20, 20, 0.8);
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .service-card.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.8) 100%);
+            z-index: -1;
+        }
+        
+        .service-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #c0b7a8, #e8e6e1);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .service-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, #c0b7a8, #e8e6e1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+        }
+        
+        .service-card:hover .service-icon {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
+        }
+        
+        .service-card h3 {
+            margin-bottom: 1.2rem;
+            font-size: 1.4rem;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .service-card p {
+            color: #bbb;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        
+        .service-card .price {
+            display: block;
+            margin-top: 1rem;
+            font-weight: 700;
+            color: #e8e6e1;
+            font-size: 1.3rem;
+        }
+        
+        /* Galeria de Trabalhos */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 4rem auto;
+            max-width: 1200px;
+            padding: 0 2rem;
+        }
+        
+        .gallery-item {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+        
+        .close-lightbox {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-lightbox:hover {
+            transform: rotate(90deg);
+        }
+        
+        /* Rodapé Sofisticado */
+        footer {
+            background: linear-gradient(135deg, #080808 0%, #0a0a0a 100%);
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem 2rem;
+            margin-top: 5rem;
+            position: relative;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #c0b7a8, #e8e6e1, transparent);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, #c0b7a8, #e8e6e1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .footer-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-info p {
+            margin: 0;
+            color: #bbb;
+            font-weight: 300;
+            position: relative;
+            padding: 0 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .footer-info p:not(:last-child)::after {
+            content: '|';
+            position: absolute;
+            right: -0.5rem;
+            color: #555;
+        }
+        
+        .social-links {
+            margin: 1.5rem 0;
+        }
+        
+        .social-links a {
+            color: #bbb;
+            margin: 0 12px;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .social-links a:hover {
+            color: #ffffff;
+            transform: translateY(-5px) scale(1.1);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .footer-map {
+            margin: 2rem auto;
+            width: 100%;
+            max-width: 800px;
+            height: 300px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-map iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .newsletter {
+            margin: 2rem auto;
+            max-width: 500px;
+        }
+        
+        .newsletter h4 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: #e8e6e1;
+        }
+        
+        .newsletter form {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .newsletter input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .newsletter input::placeholder {
+            color: #bbb;
+        }
+        
+        .newsletter button {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, #c0b7a8 0%, #e8e6e1 100%);
+            color: #111;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .newsletter button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+        }
+        
+        .copyright {
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 1.5rem;
+        }
+        
+        /* Divisor Decorativo */
+        .divider {
+            position: relative;
+            height: 120px;
+            width: 100%;
+            overflow: hidden;
+            margin: 4rem 0;
+        }
+        
+        .divider svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .divider .shape-fill {
+            fill: rgba(20, 20, 20, 0.8);
+        }
+        
+        /* Animações Premium */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Efeito de flutuação sutil */
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(0deg); }
+        }
+        
+        /* Efeito de brilho */
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
+            50% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+        }
+        
+        .logo, .hero h1, .social-links a:hover, .social-header a:hover {
+            animation: glow 3s ease-in-out infinite;
+        }
+        
+        /* Mobile Menu Styles - Estilo Premium */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 350px;
+            height: 100vh;
+            background: rgba(15, 15, 15, 0.95);
+            z-index: 1000;
+            transition: all 0.4s ease;
+            padding: 5rem 2rem;
+            box-shadow: -5px 0 25px rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .mobile-nav.active {
+            right: 0;
+        }
+        
+        .mobile-nav-links {
+            list-style: none;
+            margin-top: 2rem;
+        }
+        
+        .mobile-nav-links li {
+            margin-bottom: 1.8rem;
+            position: relative;
+        }
+        
+        .mobile-nav-links li::after {
+            content: '';
+            position: absolute;
+            bottom: -0.8rem;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(to right, #c0b7a8, #e8e6e1);
+        }
+        
+        .mobile-nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 1.2rem;
+            display: block;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .mobile-nav-links a:hover {
+            color: #ffffff;
+            transform: translateX(8px);
+        }
+        
+        .mobile-nav-links .admin-link {
+            background: linear-gradient(to right, #c0b7a8, #e8e6e1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 600;
+        }
+        
+        .mobile-social-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 3rem;
+        }
+        
+        .mobile-social-links a {
+            color: #e0e0e0;
+            font-size: 1.6rem;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-social-links a:hover {
+            color: #ffffff;
+            transform: translateY(-5px) scale(1.1);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .logo-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 80%;
+    margin-right: 10px;
+    vertical-align: middle;
+    border: 2px solid rgba(192, 183, 168, 0.5);
+    transition: all 0.3s ease;
+    object-fit: cover; /* Garante que a imagem não distorça */
+}
+
+.logo:hover .logo-image {
+    transform: scale(1.05);
+    border-color: rgba(192, 183, 168, 0.8);
+}
+
+/* Ajuste para alinhar verticalmente */
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 2rem;
+}
+
+        /* Responsividade Premium */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3.2rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 600px;
+            }
+            
+            .hero h1 {
+                font-size: 2.6rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+                max-width: 90%;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .service-card {
+                padding: 2rem;
+            }
+            
+            .service-card:hover {
+                transform: none;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            }
+            
+            .footer-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .footer-info p:not(:last-child)::after {
+                display: none;
+            }
+            
+            footer {
+                padding: 2.5rem 1rem 1.5rem;
+            }
+            
+            .footer-content h3 {
+                margin-bottom: 1.2rem;
+            }
+            
+            .footer-info {
+                margin-bottom: 1.2rem;
+            }
+            
+            .footer-info p {
+                font-size: 0.9rem;
+                padding: 0;
+            }
+            
+            .social-links {
+                margin: 1.2rem 0;
+            }
+            
+            .newsletter form {
+                flex-direction: column;
+            }
+            
+            .newsletter button {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            header {
+                padding: 1rem;
+            }
+            
+            .scrolled {
+                padding: 0.6rem 1rem;
+            }
+            
+            .logo {
+                font-size: 1.6rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 0.9rem 2.2rem;
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .mobile-nav {
+                width: 85%;
+                padding: 4rem 1.5rem;
+            }
+            
+            .mobile-nav-links li {
+                margin-bottom: 1.5rem;
+            }
+            
+            .mobile-nav-links a {
+                font-size: 1.1rem;
+            }
+            
+            .mobile-social-links {
+                gap: 20px;
+            }
+            
+            .mobile-social-links a {
+                font-size: 1.5rem;
+            }
+            
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Efeito de Partículas -->
+    <div class="particles" id="particles"></div>
+    
+    <header id="main-header">
+        <nav>
+            <div class="logo">
+                <img alt="Logo GaDoCort" class="logo-image" src="logo/GC.jpg">
+                <span class="ga">GA</span><span class="do">DO</span><span class="cort">CORT</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Início</a></li>
+                <li><a href="agendamento.html">Agendamento</a></li>
+                <li><a href="consultar-agendamento.html">Consultar Agendamento</a></li>
+                <li><a href="admin.html" class="admin-link">Acesso Administrativo</a></li>
+                <li class="social-header">
+                    <a href="https://l.instagram.com/?u=https%3A%2F%2Fapi.whatsapp.com%2Fsend%3Fphone%3D5511971302339%26text%3DGostaria%2Bde%2Bagender%2Bum%2Bhor%25C3%25A1rio%2521%26fbclid%3DPAZXh0bgNhZW0CMTEAAafCfb14WTdlWT2Kv9IBMoUK6FEDHcGqPPI1Mu8TfgMLyOysqHeJcA6ljNmmnw_aem_MlgIiCVOWOEEeT7BptKe4w&e=AT0Nfsm3GHqWGtV5-d78v4YUK22iEEZzVBkD-MwtK9SxLPtNnR-gQkuB_dU7HOQrUY5gZ67Qp_rCEYPTyod9KkW0Wi8ya6fnMOcLcNiVW8DQuDU7KTab5UE"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.instagram.com/barbeariagadocort/"><i class="fab fa-instagram"></i></a>
+                </li>
+            </ul>
+            <div class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- Mobile Navigation -->
+    <div class="overlay"></div>
+    <div class="mobile-nav">
+        <ul class="mobile-nav-links">
+            <li><a href="index.html">Início</a></li>
+            <li><a href="agendamento.html">Agendamento</a></li>
+            <li><a href="consultar-agendamento.html">Consultar Agendamento</a></li>
+            <li><a href="admin.html" class="admin-link">Acesso Administrativo</a></li>
+        </ul>
+        <div class="mobile-social-links">
+            <a href="https://l.instagram.com/?u=https%3A%2F%2Fapi.whatsapp.com%2Fsend%3Fphone%3D5511971302339%26text%3DGostaria%2Bde%2Bagender%2Bum%2Bhor%25C3%25A1rio%2521%26fbclid%3DPAZXh0bgNhZW0CMTEAAafCfb14WTdlWT2Kv9IBMoUK6FEDHcGqPPI1Mu8TfgMLyOysqHeJcA6ljNmmnw_aem_MlgIiCVOWOEEeT7BptKe4w&e=AT0Nfsm3GHqWGtV5-d78v4YUK22iEEZzVBkD-MwtK9SxLPtNnR-gQkuB_dU7HOQrUY5gZ67Qp_rCEYPTyod9KkW0Wi8ya6fnMOcLcNiVW8DQuDU7KTab5UE"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://www.instagram.com/barbeariagadocort/"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+    
+    <main>
+        <section class="hero">
+            <!-- Vídeo Background -->
+            <div class="video-background">
+                <video autoplay muted loop id="myVideo">
+                    <source src="videos/gadocort.mp4" type="video/mp4">
+                </video>
+            </div>
+            
+            <div class="hero-content">
+                <h1>Excelência em Estilo Masculino</h1>
+                <p>Na GaDoCort, elevamos a arte da barbearia a um novo patamar, combinando técnicas ancestrais com um design contemporâneo para criar experiências únicas.</p>
+                <a href="agendamento.html" class="btn">Reserve Seu Horário</a>
+            </div>
+        </section>
+        
+        <!-- Divisor Decorativo -->
+        <div class="divider">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M1200 120L0 16.48 0 0 1200 0 1200 120z" class="shape-fill"></path>
+            </svg>
+        </div>
+        
+        <section class="services">
+            <h2 class="section-title">Nossos Serviços Exclusivos</h2>
+            <div class="services-grid" id="services-container">
+                <!-- Serviços serão carregados via JavaScript -->
+            </div>
+        </section>
+        
+        <!-- Galeria de Trabalhos -->
+        <section class="gallery-section">
+            <h2 class="section-title">Nossos Trabalhos</h2>
+            <div class="gallery">
+                <div class="gallery-item" style="background-image: url('logo/1.jpg')" data-lightbox="gallery"></div>
+                <div class="gallery-item" style="background-image: url('logo/2.jpg')" data-lightbox="gallery"></div>
+                <div class="gallery-item" style="background-image: url('logo/3.jpg')" data-lightbox="gallery"></div>
+                <div class="gallery-item" style="background-image: url('logo/4.jpg')" data-lightbox="gallery"></div>
+                <div class="gallery-item" style="background-image: url('logo/5.jpg')" data-lightbox="gallery"></div>
+                
+            </div>
+        </section>
+        
+        <!-- Lightbox -->
+        <div class="lightbox" id="lightbox">
+            <span class="close-lightbox">&times;</span>
+            <div class="lightbox-content">
+                <img src="" alt="Imagem ampliada">
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <h3>GaDoCort</h3>
+            <div class="footer-info">
+                <p>R. Vicente de Paulo Pereira, 187 - Fazenda Grande, Jundiaí - SP, 13212-423</p>
+                <p>Horário: Ter-Sáb 10h-20h</p>
+                <p>Telefone: (11) 97130-2339</p>
+            </div>
+            
+            <!-- Mapa Interativo -->
+            <div class="footer-map">
+                <iframe src="https://maps.google.com/maps?q=R.+Vicente+de+Paulo+Pereira,+187+-+Fazenda+Grande,+Jundiaí+-+SP&output=embed" 
+                        frameborder="0" 
+                        style="border:0" 
+                        allowfullscreen></iframe>
+            </div>
+            
+            <!-- Newsletter -->
+            <div class="newsletter">
+                <h4>Junte-se ao nosso clube exclusivo</h4>
+                <form id="newsletter-form">
+                    <input type="email" placeholder="Seu e-mail premium" required>
+                    <button type="submit">Assinar</button>
+                </form>
+            </div>
+            
+            <div class="social-links">
+                <a href="https://l.instagram.com/?u=https%3A%2F%2Fapi.whatsapp.com%2Fsend%3Fphone%3D5511971302339%26text%3DGostaria%2Bde%2Bagender%2Bum%2Bhor%25C3%25A1rio%2521%26fbclid%3DPAZXh0bgNhZW0CMTEAAafCfb14WTdlWT2Kv9IBMoUK6FEDHcGqPPI1Mu8TfgMLyOysqHeJcA6ljNmmnw_aem_MlgIiCVOWOEEeT7BptKe4w&e=AT0Nfsm3GHqWGtV5-d78v4YUK22iEEZzVBkD-MwtK9SxLPtNnR-gQkuB_dU7HOQrUY5gZ67Qp_rCEYPTyod9KkW0Wi8ya6fnMOcLcNiVW8DQuDU7KTab5UE"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.instagram.com/barbeariagadocort/"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+            </div>
+            <p class="copyright">&copy; 2023 GaDoCort. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Efeito de Partículas
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Posição aleatória
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100 + 100; // Começa abaixo da viewport
+                
+                // Tamanho aleatório
+                const size = Math.random() * 3 + 1;
+                
+                // Duração e delay aleatórios
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 10;
+                
+                // Aplica estilos
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.opacity = Math.random() * 0.5 + 0.1;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Header Scroll Effect
+        function headerScrollEffect() {
+            const header = document.getElementById('main-header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+        }
+        
+        // Carrega os serviços na página inicial
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            headerScrollEffect();
+            
+            const servicesContainer = document.getElementById('services-container');
+            
+            // Recupera serviços do localStorage
+            const services = JSON.parse(localStorage.getItem('services')) || [];
+            
+            if (services.length === 0) {
+                // Serviços padrão caso não existam
+                const defaultServices = [
+                    { id: 1, name: 'Corte Premium', price: 45.00, duration: 40 },
+                    { id: 2, name: 'Barba Executiva', price: 35.00, duration: 30 },
+                    { id: 3, name: 'Combo Completo', price: 70.00, duration: 70 },
+                    { id: 4, name: 'Hidratação Capilar', price: 25.00, duration: 20 },
+                    { id: 5, name: 'Tratamento Facial', price: 40.00, duration: 45 },
+                    { id: 6, name: 'Pigmentação de Barba', price: 60.00, duration: 60 }
+                ];
+                
+                localStorage.setItem('services', JSON.stringify(defaultServices));
+                loadServices(defaultServices);
+            } else {
+                loadServices(services);
+            }
+            
+            function loadServices(services) {
+                servicesContainer.innerHTML = '';
+                
+                services.forEach(service => {
+                    const serviceCard = document.createElement('div');
+                    serviceCard.className = 'service-card animate-on-scroll';
+                    
+                    // Escolhe o ícone com base no nome do serviço
+                    let icon = '✂️';
+                    if (service.name.includes('Barba')) icon = '🧔';
+                    if (service.name.includes('Combo')) icon = '💈';
+                    if (service.name.includes('Hidratação')) icon = '💆‍♂️';
+                    if (service.name.includes('Facial')) icon = '🧖‍♂️';
+                    if (service.name.includes('Pigmentação')) icon = '🎨';
+                    
+                    serviceCard.innerHTML = `
+                        <div class="service-icon">${icon}</div>
+                        <h3>${service.name}</h3>
+                        <p>${getServiceDescription(service.name)}</p>
+                        <span class="price">R$ ${service.price.toFixed(2)}</span>
+                    `;
+                    servicesContainer.appendChild(serviceCard);
+                });
+            }
+            
+            function getServiceDescription(serviceName) {
+                const descriptions = {
+                    'Corte Premium': 'Corte de cabelo personalizado com técnicas avançadas e finalização premium.',
+                    'Barba Executiva': 'Modelagem de barba com navalha, hidratação e acabamento perfeito.',
+                    'Combo Completo': 'Corte + barba + hidratação para um visual completo e renovado.',
+                    'Hidratação Capilar': 'Tratamento intensivo para cabelos ressecados e danificados.',
+                    'Tratamento Facial': 'Limpeza de pele profunda com massagem relaxante.',
+                    'Pigmentação de Barba': 'Técnica para uniformizar e densificar a barba.'
+                };
+                
+                return descriptions[serviceName] || `Duração: ${serviceName.includes('Combo') ? '70' : '40'} min`;
+            }
+            
+            // Observador de interseção para animação ao rolar
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Mobile Menu Toggle
+            const menuToggle = document.querySelector('.menu-toggle');
+            const mobileNav = document.querySelector('.mobile-nav');
+            const overlay = document.querySelector('.overlay');
+            
+            menuToggle.addEventListener('click', function() {
+                mobileNav.classList.toggle('active');
+                overlay.classList.toggle('active');
+                document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : 'auto';
+                
+                // Altera o ícone do menu
+                const icon = menuToggle.querySelector('i');
+                if (mobileNav.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            // Fecha o menu ao clicar no overlay
+            overlay.addEventListener('click', function() {
+                mobileNav.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+                
+                // Altera o ícone do menu
+                const icon = menuToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+            
+            // Fecha o menu ao clicar em um link
+            const mobileLinks = document.querySelectorAll('.mobile-nav-links a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileNav.classList.remove('active');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                    
+                    // Altera o ícone do menu
+                    const icon = menuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                });
+            });
+            
+            // Lightbox Gallery
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = lightbox.querySelector('img');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            const closeLightbox = document.querySelector('.close-lightbox');
+            
+            galleryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const imgUrl = this.style.backgroundImage
+                        .replace('url("', '')
+                        .replace('")', '');
+                    lightboxImg.src = imgUrl;
+                    lightbox.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+            
+            closeLightbox.addEventListener('click', function() {
+                lightbox.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            lightbox.addEventListener('click', function(e) {
+                if (e.target === lightbox) {
+                    lightbox.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Newsletter Form
+            const newsletterForm = document.getElementById('newsletter-form');
+            newsletterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = this.querySelector('input').value;
+                // Aqui você pode adicionar o código para enviar o email
+                alert(`Obrigado por assinar nossa newsletter! Email: ${email}`);
+                this.reset();
+            });
+            
+            // Rolagem suave para links internos
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
