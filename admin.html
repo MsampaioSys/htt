@@ -1,0 +1,2974 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Área Admin - GaDoCort</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Bibliotecas para gráficos e calendário -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
+    <style>
+        /* Reset e Variáveis CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --card-bg: white;
+            --header-bg: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+            --tab-bg: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+            --border-color: rgba(0, 0, 0, 0.05);
+            --input-bg: #f9f9f9;
+            --hover-bg: #f9f9f9;
+        }
+        
+        .dark-theme {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --header-bg: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            --tab-bg: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            --border-color: rgba(255, 255, 255, 0.05);
+            --input-bg: #2d2d2d;
+            --hover-bg: #2d2d2d;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+        
+        /* Login - Design Moderno */
+        .admin-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://images.unsplash.com/photo-1519501025274-130f16653922?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            position: relative;
+        }
+        
+        .admin-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(0, 0, 0, 0.8) 100%);
+            z-index: 0;
+        }
+        
+        .login-box {
+            background: white;
+            padding: 2rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, #d4af37, #f1e5ac);
+        }
+        
+        .login-title {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, #d4af37, #f1e5ac);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 600;
+            letter-spacing: 1px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .login-title::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, #d4af37, #f1e5ac);
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            color: #555;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.9rem 1.1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+            background-color: white;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #d4af37 0%, #f1e5ac 100%);
+            color: #1a1a1a;
+            border: none;
+            padding: 0.9rem 1.5rem;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            position: relative;
+            overflow: hidden;
+            margin-top: 1.2rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover::after {
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #1a1a1a;
+            border: 1px solid #d4af37;
+            margin-top: 0.8rem;
+        }
+        
+        .btn-secondary:hover {
+            background: #f9f9f9;
+            color: #1a1a1a;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Dashboard - Design Moderno */
+        .admin-dashboard {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+        }
+        
+        /* Cabeçalho Aprimorado */
+        .admin-header {
+            background: var(--header-bg);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .admin-header-content {
+            display: flex;
+            align-items: center;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            justify-content: space-between;
+        }
+        
+        .admin-title {
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+        }
+        
+        .logo .ga {
+            background: linear-gradient(to right, #d4af37, #f1e5ac);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .logo .do {
+            background: linear-gradient(to right, #fafbfc, #fafbfc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0 2px;
+        }
+        
+        .logo .cort {
+            background: linear-gradient(to right, #f1e5ac, #d4af37);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .admin-title img {
+            height: 36px;
+            width: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 0.8rem;
+            border: 2px solid #d4af37;
+        }
+        
+        .admin-user {
+            display: flex;
+            align-items: center;
+        }
+        
+        .admin-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37 0%, #f1e5ac 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.8rem;
+            font-weight: bold;
+            color: #1a1a1a;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logout-btn {
+            background: transparent;
+            color: white;
+            border: 1px solid #d4af37;
+            padding: 0.5rem 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+        
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #d4af37 0%, #f1e5ac 100%);
+            color: #1a1a1a;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+        
+        /* Abas de Navegação */
+        .admin-tabs {
+            display: flex;
+            background: var(--tab-bg);
+            padding: 0 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 60px;
+            z-index: 999;
+        }
+        
+        .tabs-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .tabs-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab-btn {
+            background: transparent;
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            position: relative;
+            white-space: nowrap;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+        
+        .tab-btn:hover {
+            color: #d4af37;
+        }
+        
+        .tab-btn.active {
+            color: #d4af37;
+            font-weight: 600;
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, #d4af37, #f1e5ac);
+            bottom: 0;
+            left: 0;
+        }
+        
+        /* Conteúdo das Abas */
+        .admin-main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        /* Dashboard - Visão Geral */
+        .dashboard-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #d4af37, #f1e5ac);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #d4af37, #f1e5ac);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0.8rem 0;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        /* Seções */
+        .section-title {
+            text-align: left;
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-color);
+            position: relative;
+            padding-bottom: 0.6rem;
+            font-weight: 600;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, #d4af37, #f1e5ac);
+            bottom: 0;
+            left: 0;
+            border-radius: 2px;
+        }
+        
+        .admin-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .admin-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #d4af37, #f1e5ac);
+        }
+        
+        /* Listas */
+        .services-list, .availability-list, .appointments-list, .professionals-list {
+            margin-top: 1.5rem;
+        }
+        
+        .service-item, .availability-item, .appointment-item, .professional-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s ease;
+            margin-bottom: 0.8rem;
+            border-radius: 8px;
+            background-color: var(--card-bg);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .service-item:hover, .availability-item:hover, .appointment-item:hover, .professional-item:hover {
+            background-color: var(--hover-bg);
+        }
+        
+        .service-info h4, .appointment-info h4, .professional-info h4 {
+            color: var(--text-color);
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 1rem;
+            font-weight: 600;
+            word-break: break-word;
+            white-space: normal;
+        }
+        
+        .service-price {
+            color: #d4af37;
+            font-weight: 700;
+        }
+        
+        .action-buttons, .professional-actions {
+            display: flex;
+            gap: 0.6rem;
+        }
+        
+        .edit-btn, .delete-btn {
+            background: transparent;
+            padding: 0.5rem 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.75rem;
+            border-radius: 50px;
+            font-weight: 500;
+            border: 1px solid;
+        }
+        
+        .edit-btn {
+            color: #3498db;
+            border-color: #3498db;
+        }
+        
+        .edit-btn:hover {
+            background: #3498db;
+            color: white;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .delete-btn {
+            color: #e74c3c;
+            border-color: #e74c3c;
+        }
+        
+        .delete-btn:hover {
+            background: #e74c3c;
+            color: white;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+        
+        .availability-date {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .availability-hours {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.4rem;
+        }
+        
+        .hour-tag {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+            color: white;
+            padding: 0.3rem 0.7rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin: 0.1rem;
+        }
+        
+        /* Botão de intervalo de horário */
+        .interval-btn {
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            margin: 0.8rem 0;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .interval-btn:hover {
+            background: linear-gradient(135deg, #d4af37 0%, #f1e5ac 100%);
+            color: #1a1a1a;
+            box-shadow: 0 6px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        /* Filtros */
+        .filter-container {
+            display: flex;
+            gap: 1.2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        
+        .filter-group label {
+            font-size: 0.85rem;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .filter-group select, .filter-group input {
+            padding: 0.6rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+        
+        .filter-group select:focus, .filter-group input:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+            background-color: white;
+        }
+        
+        /* Estilo para filtros ativos */
+        .filter-active {
+            border: 2px solid #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+        
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 9999;
+            animation: slideIn 0.3s, fadeOut 0.5s 2.5s forwards;
+            max-width: 90%;
+            word-break: break-word;
+        }
+        
+        .toast-success {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+        
+        .toast-error {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .toast-warning {
+            background: linear-gradient(135deg, #f39c12, #d35400);
+        }
+        
+        .toast-info {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 20px auto;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #d4af37;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        /* Modal de Confirmação */
+        .action-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9998;
+            padding: 1rem;
+        }
+        
+        .action-modal .modal-content {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .action-modal .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-top: 1.2rem;
+        }
+        
+        .action-modal .btn-cancel {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .action-modal .btn-confirm {
+            background: linear-gradient(135deg, #d4af37, #f1e5ac);
+        }
+        
+        /* Botão de Tema */
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37, #f1e5ac);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        
+        .theme-toggle i {
+            font-size: 1.2rem;
+            color: #1a1a1a;
+        }
+        
+        /* Estilos para o calendário */
+        #calendar {
+            max-width: 100%;
+            margin: 0 auto;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .fc-toolbar-title {
+            font-size: 1.1rem !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .fc-button {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%) !important;
+            border: none !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.75rem !important;
+            font-weight: 500 !important;
+            padding: 0.4rem 0.8rem !important;
+        }
+        
+        .fc-button:hover {
+            background: linear-gradient(135deg, #d4af37 0%, #f1e5ac 100%) !important;
+        }
+        
+        .fc-button-primary:not(:disabled).fc-button-active {
+            background: linear-gradient(135deg, #d4af37 0%, #f1e5ac 100%) !important;
+            color: #1a1a1a !important;
+        }
+        
+        .fc-daygrid-event {
+            background: linear-gradient(135deg, #d4af37 0%, #f1e5ac 100%) !important;
+            border: none !important;
+            color: #1a1a1a !important;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+        
+        .fc-daygrid-event:hover {
+            opacity: 0.9;
+        }
+        
+        .fc-day-today {
+            background-color: rgba(212, 175, 55, 0.1) !important;
+        }
+        
+        .fc-view-harness {
+            min-height: 400px;
+        }
+        
+        /* Menu Mobile */
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            color: white;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            margin-right: 0.8rem;
+        }
+        
+        /* Botão de adicionar para mobile */
+        .mobile-add-btn {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37, #f1e5ac);
+            color: #1a1a1a;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-size: 1.4rem;
+            z-index: 100;
+            cursor: pointer;
+        }
+        
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .loading-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #d4af37;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        
+        /* Animações */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Efeito de flutuação sutil */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .stat-card {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Estilos para volumetrias */
+        .volumetry-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        
+        .volumetry-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+        
+        .volumetry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .volumetry-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .volumetry-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #d4af37;
+        }
+        
+        .volumetry-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        
+        .volumetry-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background-color: var(--hover-bg);
+            border-radius: 8px;
+        }
+        
+        .volumetry-item-name {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        .volumetry-item-value {
+            font-weight: 600;
+            color: #d4af37;
+        }
+        
+        /* Ajustes específicos para o calendário */
+        .fc-daygrid-day-top {
+            padding: 2px 4px !important;
+        }
+        
+        .fc-day-sat .fc-daygrid-day-top {
+            padding-right: 6px !important;
+        }
+        
+        .fc-daygrid-event {
+            padding: 1px 3px !important;
+            margin: 1px 2px !important;
+            font-size: 0.8em !important;
+        }
+        
+        .fc-event-time {
+            font-weight: 600;
+        }
+        
+        .fc-event-title {
+            display: none;
+        }
+        
+        .fc-daygrid-event:hover .fc-event-title {
+            display: inline;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            .admin-header {
+                padding: 0.8rem 1rem;
+            }
+            
+            .admin-tabs {
+                padding: 0 1rem;
+            }
+            
+            .admin-main {
+                padding: 0 1rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .dashboard-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .admin-card {
+                padding: 1.5rem;
+            }
+            
+            .volumetry-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .fc-toolbar-title {
+                font-size: 1rem !important;
+            }
+            
+            .fc-button {
+                font-size: 0.7rem !important;
+                padding: 0.3rem 0.6rem !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .login-box {
+                padding: 1.8rem 1.5rem;
+            }
+            
+            .login-title {
+                font-size: 1.6rem;
+            }
+            
+            .service-item, .availability-item, .appointment-item, .professional-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.2rem;
+            }
+            
+            .action-buttons, .professional-actions {
+                align-self: flex-end;
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .admin-tabs {
+                flex-direction: column;
+                padding: 0;
+                top: 60px;
+            }
+            
+            .tabs-container {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                padding: 0.9rem;
+                text-align: left;
+                border-bottom: 1px solid #333;
+            }
+            
+            .tab-btn.active::after {
+                width: 3px;
+                height: 100%;
+                left: 0;
+                bottom: auto;
+                top: 0;
+            }
+            
+            .dashboard-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .admin-user {
+                margin-top: 0.8rem;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .filter-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.8rem;
+            }
+            
+            .filter-group {
+                width: 100%;
+            }
+            
+            .filter-group select, .filter-group input {
+                width: 100%;
+            }
+            
+            /* Menu Mobile */
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .tabs-container {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--tab-bg);
+            }
+            
+            .tabs-container.show {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            /* Botão de adicionar para mobile */
+            .mobile-add-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            /* Ajusta o tema toggle para não ficar em cima do botão de adicionar */
+            .theme-toggle {
+                bottom: 150px;
+            }
+            
+            /* Ajusta os botões de ação para mobile */
+            .edit-btn, .delete-btn {
+                padding: 0.5rem 0.9rem;
+                font-size: 0.65rem;
+            }
+            
+            .fc-toolbar {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .fc-toolbar-chunk {
+                display: flex;
+                justify-content: center;
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .admin-container {
+                padding: 0.8rem;
+            }
+            
+            .login-box {
+                padding: 1.5rem 1.2rem;
+            }
+            
+            .login-title {
+                font-size: 1.4rem;
+            }
+            
+            .form-group input, .form-group select {
+                padding: 0.8rem 1rem;
+            }
+            
+            .btn {
+                padding: 0.8rem;
+            }
+            
+            .admin-card {
+                padding: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+            
+            .stat-card {
+                padding: 1.2rem;
+                animation: none;
+            }
+            
+            .stat-value {
+                font-size: 1.8rem;
+            }
+            
+            /* Ajuste para o tema toggle para telas muito pequenas */
+            .theme-toggle {
+                bottom: 130px;
+                left: 15px;
+                width: 45px;
+                height: 45px;
+            }
+            
+            .mobile-add-btn {
+                bottom: 70px;
+                right: 15px;
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .fc-toolbar-title {
+                font-size: 0.9rem !important;
+            }
+            
+            .fc-button {
+                font-size: 0.6rem !important;
+                padding: 0.2rem 0.5rem !important;
+            }
+            
+            .fc-daygrid-event {
+                font-size: 0.7rem;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .login-box {
+                padding: 1.2rem 1rem;
+            }
+            
+            .login-title {
+                font-size: 1.3rem;
+            }
+            
+            .admin-title {
+                font-size: 1.1rem;
+            }
+            
+            .admin-title img {
+                height: 30px;
+                width: 30px;
+            }
+            
+            .logout-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.7rem;
+            }
+            
+            .tab-btn {
+                padding: 0.8rem;
+                font-size: 0.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+            }
+            
+            .theme-toggle {
+                bottom: 120px;
+                width: 40px;
+                height: 40px;
+            }
+            
+            .mobile-add-btn {
+                bottom: 65px;
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* Correções para o tema escuro */
+        .dark-theme .service-item, 
+        .dark-theme .availability-item, 
+        .dark-theme .appointment-item,
+        .dark-theme .professional-item {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+        
+        .dark-theme .hour-tag {
+            background: linear-gradient(135deg, #333, #444);
+        }
+        
+        /* Melhorias para touch em dispositivos móveis */
+        button, input, select, textarea {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            touch-action: manipulation;
+        }
+        
+        input, select, textarea {
+            min-height: 44px;
+        }
+        
+        button, .btn {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        /* Prevenir zoom em inputs em iOS */
+        @media screen and (-webkit-min-device-pixel-ratio:0) {
+            select:focus, textarea:focus, input:focus {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container" id="loginSection">
+        <div class="login-box">
+            <h2 class="login-title">Área Admin</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="adminUser">Usuário</label>
+                    <input type="text" id="adminUser" required placeholder="Digite seu usuário">
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Senha</label>
+                    <input type="password" id="adminPassword" required placeholder="Digite sua senha">
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <a href="index.html" class="btn btn-secondary">Página Principal</a>
+            </form>
+        </div>
+    </div>
+
+    <div class="admin-dashboard" id="dashboardSection" style="display: none;">
+        <header class="admin-header">
+            <div class="admin-header-content">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="admin-title">
+                    <a href="https://www.instagram.com/barbeariagadocort/" target="_blank" style="display: flex; align-items: center; text-decoration: none; color: white;">
+                        <!-- Imagem do perfil do Instagram -->
+                        <!--<img src="/logo/GC.jpg"
+                             alt="Logo Barbearia" 
+                             style="height: 36px; width: 36px; border-radius: 50%; object-fit: cover; margin-right: 0.8rem;"> -->
+                        <div class="logo"><span class="ga">GA</span><span class="do">DO</span><span class="cort">CORT</span> <span style="font-size: 0.8rem; margin-left: 0.4rem;">ADMIN</span></div>
+                    </a>
+                </h1>
+                <div class="admin-user">
+                    <div class="admin-avatar" id="userInitial">A</div>
+                    <button id="logoutBtn" class="logout-btn">Sair</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="admin-tabs">
+            <div class="tabs-container" id="tabsContainer">
+                <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+                <button class="tab-btn" data-tab="services">Serviços</button>
+                <button class="tab-btn" data-tab="professionals">Profissionais</button>
+                <button class="tab-btn" data-tab="availability">Disponibilidade</button>
+                <button class="tab-btn" data-tab="appointments">Agendamentos</button>
+                <button class="tab-btn" data-tab="calendar">Calendário</button>
+            </div>
+        </div>
+
+        <main class="admin-main">
+            <!-- Dashboard -->
+            <div class="tab-content active" id="dashboard-tab">
+                <section class="admin-section">
+                    <h2 class="section-title">Visão Geral</h2>
+                    
+                    <div class="dashboard-overview">
+                        <div class="stat-card">
+                            <div class="stat-label">Agendamentos Hoje</div>
+                            <div class="stat-value" id="todayAppointments">0</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-label">Total de Serviços</div>
+                            <div class="stat-value" id="totalServices">0</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-label">R$ Faturamento Mês</div>
+                            <div class="stat-value"> <span id="totalRevenue" style="font-size: 1.8rem;" >0</span></div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-label">Horários Disponíveis</div>
+                            <div class="stat-value" id="availableSlots">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-card">
+                        <div class="filter-container">
+                            <div class="filter-group">
+                                <label for="dateRange">Período:</label>
+                                <select id="dateRange">
+                                    <option value="thisMonth">Este mês</option>
+                                    <option value="lastMonth">Mês anterior</option>
+                                    <option value="thisYear">Este ano</option>
+                                    <option value="custom">Personalizado</option>
+                                </select>
+                            </div>
+                            
+                            <div class="filter-group" id="customDateRange" style="display: none;">
+                                <label for="startDate">De:</label>
+                                <input type="date" id="startDate">
+                                <label for="endDate">Até:</label>
+                                <input type="date" id="endDate">
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label for="dashboardService">Serviço:</label>
+                                <select id="dashboardService">
+                                    <option value="all">Todos os serviços</option>
+                                    <!-- Será preenchido dinamicamente -->
+                                </select>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label for="dashboardProfessional">Profissional:</label>
+                                <select id="dashboardProfessional">
+                                    <option value="all">Todos os profissionais</option>
+                                    <!-- Será preenchido dinamicamente -->
+                                </select>
+                            </div>
+                            
+                            <button id="applyDashboardFilter" class="btn">Aplicar Filtro</button>
+                            <button id="resetDashboardFilter" class="btn btn-secondary">Limpar Filtros</button>
+                        </div>
+                        
+                        <div class="volumetry-container">
+                            <div class="volumetry-card">
+                                <div class="volumetry-header">
+                                    <h3 class="volumetry-title">Agendamentos por Serviço</h3>
+                                    <div class="volumetry-value" id="totalAppointmentsByService">0</div>
+                                </div>
+                                <div class="volumetry-list" id="appointmentsByServiceList">
+                                    <!-- Lista de agendamentos por serviço será carregada aqui -->
+                                </div>
+                            </div>
+                            
+                            <div class="volumetry-card">
+                                <div class="volumetry-header">
+                                    <h3 class="volumetry-title">Faturamento por Serviço</h3>
+                                    <div class="volumetry-value" id="totalRevenueByService">R$ 0,00</div>
+                                </div>
+                                <div class="volumetry-list" id="revenueByServiceList">
+                                    <!-- Lista de faturamento por serviço será carregada aqui -->
+                                </div>
+                            </div>
+
+                            <div class="volumetry-card">
+                                <div class="volumetry-header">
+                                    <h3 class="volumetry-title">Agendamentos por Profissional</h3>
+                                    <div class="volumetry-value" id="totalAppointmentsByProfessional">0</div>
+                                </div>
+                                <div class="volumetry-list" id="appointmentsByProfessionalList">
+                                    <!-- Lista de agendamentos por profissional será carregada aqui -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3 class="section-title">Agendamentos Recentes</h3>
+                        <div class="appointments-list" id="recentAppointments">
+                            <!-- Últimos agendamentos serão carregados aqui -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Aba Serviços -->
+            <div class="tab-content" id="services-tab">
+                <section class="admin-section">
+                    <h2 class="section-title">Gerenciar Serviços</h2>
+                    <div class="admin-card">
+                        <form id="addServiceForm">
+                            <div class="form-group">
+                                <label for="serviceName">Nome do Serviço</label>
+                                <input type="text" id="serviceName" required placeholder="Ex: Corte de Cabelo">
+                            </div>
+                            <div class="form-group">
+                                <label for="servicePrice">Preço (R$)</label>
+                                <input type="number" id="servicePrice" step="0.01" required placeholder="Ex: 30.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="serviceDuration">Duração (minutos)</label>
+                                <input type="number" id="serviceDuration" required placeholder="Ex: 30">
+                            </div>
+                            <button type="submit" class="btn">Adicionar Serviço</button>
+                        </form>
+
+                        <div class="services-list" id="servicesList">
+                            <!-- Lista de serviços será carregada via JavaScript -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Nova Aba: Profissionais -->
+            <div class="tab-content" id="professionals-tab">
+                <section class="admin-section">
+                    <h2 class="section-title">Gerenciar Profissionais</h2>
+                    <div class="admin-card">
+                        <form id="addProfessionalForm">
+                            <div class="form-group">
+                                <label for="professionalName">Nome do Profissional</label>
+                                <input type="text" id="professionalName" required placeholder="Ex: Gabriel Fernandes">
+                            </div>
+                            <button type="submit" class="btn">Adicionar Profissional</button>
+                        </form>
+
+                        <div class="professionals-list" id="professionalsList" style="margin-top: 2rem;">
+                            <!-- Lista de profissionais será carregada aqui -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Aba Disponibilidade -->
+            <div class="tab-content" id="availability-tab">
+                <section class="admin-section">
+                    <h2 class="section-title">Disponibilidade</h2>
+                    <div class="admin-card">
+                        <form id="availabilityForm">
+                            <div class="form-group">
+                                <label for="availableDate">Data</label>
+                                <input type="date" id="availableDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="availableProfessional">Profissional</label>
+                                <select id="availableProfessional" required>
+                                    <!-- Será preenchido dinamicamente -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="availableHours">Horários (separados por vírgula)</label>
+                                <input type="text" id="availableHours" placeholder="Ex: 09:00, 10:00, 11:00" required>
+                            </div>
+                            <button type="button" id="addIntervalBtn" class="interval-btn">Adicionar intervalo 10:00–20:00 (45min)</button>
+                            <button type="submit" class="btn">Adicionar Disponibilidade</button>
+                        </form>
+
+                        <div class="availability-list" id="availabilityList">
+                            <!-- Lista de disponibilidade será carregada via JavaScript -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Aba Agendamentos -->
+            <div class="tab-content" id="appointments-tab">
+                <section class="admin-section">
+                    <h2 class="section-title">Agendamentos</h2>
+                    <div class="admin-card">
+                        <div class="filter-container">
+                            <div class="form-group" style="margin-bottom: 0; flex: 1;">
+                                <label for="searchAppointment">Pesquisar:</label>
+                                <input type="text" id="searchAppointment" placeholder="Nome ou ID agendamento">
+                            </div>
+                            <button id="searchAppointmentBtn" class="btn">Buscar</button>
+                        </div>
+                        
+                        <div class="appointments-list" id="appointmentsList">
+                            <!-- Lista de agendamentos será carregada via JavaScript -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Aba Calendário -->
+            <div class="tab-content" id="calendar-tab">
+                <section class="admin-section">
+                    <h2 class="section-title">Calendário de Agendamentos</h2>
+                    <div class="admin-card" style="padding: 1rem;">
+                        <div id="calendar"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Botão de alternar tema -->
+    <button id="themeToggle" class="theme-toggle">
+        <i class="fas fa-moon"></i>
+    </button>
+    
+    <!-- Botão de adicionar para mobile -->
+    <button id="mobileAddBtn" class="mobile-add-btn">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Bibliotecas JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/pt-br.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos do DOM
+            const loginForm = document.getElementById('loginForm');
+            const adminUserInput = document.getElementById('adminUser');
+            const adminPasswordInput = document.getElementById('adminPassword');
+            const loginSection = document.getElementById('loginSection');
+            const dashboardSection = document.getElementById('dashboardSection');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const userInitial = document.getElementById('userInitial');
+            const addIntervalBtn = document.getElementById('addIntervalBtn');
+            const searchAppointmentInput = document.getElementById('searchAppointment');
+            const searchAppointmentBtn = document.getElementById('searchAppointmentBtn');
+            const dateRangeSelect = document.getElementById('dateRange');
+            const customDateRange = document.getElementById('customDateRange');
+            const startDateInput = document.getElementById('startDate');
+            const endDateInput = document.getElementById('endDate');
+            const dashboardServiceSelect = document.getElementById('dashboardService');
+            const dashboardProfessionalSelect = document.getElementById('dashboardProfessional');
+            const applyDashboardFilter = document.getElementById('applyDashboardFilter');
+            const resetDashboardFilter = document.getElementById('resetDashboardFilter');
+            const themeToggle = document.getElementById('themeToggle');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const tabsContainer = document.getElementById('tabsContainer');
+            const mobileAddBtn = document.getElementById('mobileAddBtn');
+            
+            // Sistema de abas
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            // Chave para criptografia (em produção, use uma chave mais segura)
+            const CRYPTO_KEY = 'gadocort-admin-secret-key';
+            
+            // Inicialização
+            init();
+
+            function loadProfessionalOptions() {
+    const professionals = JSON.parse(localStorage.getItem('professionals')) || [];
+    const professionalSelects = [
+        document.getElementById('availableProfessional'),
+        document.getElementById('dashboardProfessional')
+    ];
+
+    professionalSelects.forEach(select => {
+        if (!select) return;
+
+        // Salva o valor atual para restaurar depois
+        const currentValue = select.value;
+        
+        // Limpa as opções existentes (mantendo a primeira se for "all" ou similar)
+        const defaultOptionText = select.id === 'dashboardProfessional' ? 'Todos os profissionais' : 'Selecione um profissional';
+        const defaultOptionValue = select.id === 'dashboardProfessional' ? 'all' : '';
+        
+        select.innerHTML = '';
+        
+        // Adiciona a opção padrão
+        const defaultOption = document.createElement('option');
+        defaultOption.value = defaultOptionValue;
+        defaultOption.textContent = defaultOptionText;
+        if (select.id !== 'dashboardProfessional') {
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+        }
+        select.appendChild(defaultOption);
+
+        // Adiciona cada profissional como uma opção
+        professionals.forEach(professional => {
+            const option = document.createElement('option');
+            option.value = professional.name;
+            option.textContent = professional.name;
+            select.appendChild(option);
+        });
+
+        // Tenta restaurar o valor anterior se ainda existir
+        if (currentValue && Array.from(select.options).some(o => o.value === currentValue)) {
+            select.value = currentValue;
+        } else if (select.id === 'dashboardProfessional') {
+            select.value = 'all';
+        }
+    });
+}     
+            
+            function init() {
+                setupEventListeners();
+                checkLoginStatus();
+                setupThemeToggle();
+                
+                // Configura datas iniciais
+                const now = new Date();
+                startDateInput.value = now.toISOString().split('T')[0];
+                endDateInput.value = now.toISOString().split('T')[0];
+                
+                // Carrega as opções de profissionais
+                loadProfessionalOptions();
+            }
+            
+            function setupEventListeners() {
+                // Navegação por abas
+                tabBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const tabId = this.getAttribute('data-tab');
+                        switchTab(tabId);
+                        
+                        // Fecha o menu mobile após selecionar uma aba
+                        if (window.innerWidth <= 768) {
+                            tabsContainer.classList.remove('show');
+                        }
+                    });
+                });
+                
+                // Login
+                loginForm.addEventListener('submit', handleLogin);
+                
+                // Logout
+                logoutBtn.addEventListener('click', handleLogout);
+                
+                // Botão de intervalo de horário
+                addIntervalBtn.addEventListener('click', addTimeInterval);
+                
+                // Busca de agendamentos
+                searchAppointmentBtn.addEventListener('click', searchAppointments);
+                searchAppointmentInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        searchAppointments();
+                    }
+                });
+                
+                // Filtro do dashboard
+                dateRangeSelect.addEventListener('change', function() {
+                    customDateRange.style.display = this.value === 'custom' ? 'flex' : 'none';
+                });
+                
+                applyDashboardFilter.addEventListener('click', applyDashboardFilters);
+                resetDashboardFilter.addEventListener('click', resetDashboardFilters);
+                
+                // Menu mobile
+                mobileMenuBtn.addEventListener('click', function() {
+                    tabsContainer.classList.toggle('show');
+                });
+                
+                // Botão de adicionar para mobile
+                mobileAddBtn.addEventListener('click', function() {
+                    const activeTab = document.querySelector('.tab-content.active').id;
+                    
+                    switch(activeTab) {
+                        case 'services-tab':
+                            document.getElementById('addServiceForm').scrollIntoView({ behavior: 'smooth' });
+                            break;
+                        case 'professionals-tab':
+                            document.getElementById('addProfessionalForm').scrollIntoView({ behavior: 'smooth' });
+                            break;
+                        case 'availability-tab':
+                            document.getElementById('availabilityForm').scrollIntoView({ behavior: 'smooth' });
+                            break;
+                        case 'appointments-tab':
+                            document.getElementById('searchAppointment').focus();
+                            break;
+                        default:
+                            // Nada a fazer para outras abas
+                    }
+                });
+            }
+            
+            function setupThemeToggle() {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                // Verifica preferência do sistema ou localStorage
+                if (localStorage.getItem('darkMode') === 'enabled' || 
+                    (localStorage.getItem('darkMode') === null && prefersDark)) {
+                    document.body.classList.add('dark-theme');
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                }
+                
+                themeToggle.addEventListener('click', function() {
+                    document.body.classList.toggle('dark-theme');
+                    const isDark = document.body.classList.contains('dark-theme');
+                    localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+                    themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+                });
+            }
+            
+            // Função para criptografar dados
+            function encryptData(data) {
+                return CryptoJS.AES.encrypt(JSON.stringify(data), CRYPTO_KEY).toString();
+            }
+            
+            // Função para descriptografar dados
+            function decryptData(ciphertext) {
+                const bytes = CryptoJS.AES.decrypt(ciphertext, CRYPTO_KEY);
+                return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+            }
+            
+            // Função para salvar dados no localStorage com criptografia
+            function saveEncryptedData(key, data) {
+                localStorage.setItem(key, encryptData(data));
+            }
+            
+            // Função para ler dados do localStorage com descriptografia
+            function readEncryptedData(key) {
+                const encryptedData = localStorage.getItem(key);
+                return encryptedData ? decryptData(encryptedData) : null;
+            }
+            
+            function checkLoginStatus() {
+                const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+                if (isLoggedIn) {
+                    showDashboard();
+                }
+            }
+            
+            function handleLogin(e) {
+                e.preventDefault();
+                
+                const username = adminUserInput.value.trim();
+                const password = adminPasswordInput.value.trim();
+                
+                if (!username || !password) {
+                    showToast('Por favor, preencha todos os campos!', 'error');
+                    return;
+                }
+                
+                // Verifica a senha (senha padrão é "gadocort123")
+                const storedPassword = localStorage.getItem('adminPassword') || 'gadocort123';
+                
+                if (password === storedPassword) {
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    localStorage.setItem('adminUser', username);
+                    showDashboard();
+                    showToast('Login realizado com sucesso!', 'success');
+                } else {
+                    showToast('Usuário ou senha incorretos!', 'error');
+                }
+            }
+            
+            function handleLogout() {
+                localStorage.removeItem('adminLoggedIn');
+                loginSection.style.display = 'flex';
+                dashboardSection.style.display = 'none';
+                adminUserInput.value = '';
+                adminPasswordInput.value = '';
+                showToast('Logout realizado com sucesso', 'info');
+            }
+            
+            function switchTab(tabId) {
+                // Remove classe active de todos os botões e conteúdos
+                tabBtns.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Adiciona classe active ao botão e conteúdo clicado
+                document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+                
+                // Atualiza dados específicos da aba se necessário
+                if (tabId === 'dashboard') {
+                    loadDashboardData();
+                } else if (tabId === 'calendar') {
+                    initCalendar();
+                } else if (tabId === 'professionals') {
+                    loadProfessionals();
+                    loadProfessionalOptions();
+                }
+            }
+            
+            function showDashboard() {
+                loginSection.style.display = 'none';
+                dashboardSection.style.display = 'block';
+                
+                // Mostra inicial do usuário
+                const username = localStorage.getItem('adminUser') || 'Admin';
+                userInitial.textContent = username.charAt(0).toUpperCase();
+                
+                // Carrega todos os dados
+                loadAllData();
+                
+                // Configura formulários
+                setupForms();
+            }
+            
+            function loadAllData() {
+                loadDashboardData();
+                loadServices();
+                loadProfessionals();
+                loadAvailability();
+                loadAppointments();
+            }
+            
+            function setupForms() {
+                // Formulário de serviços
+                document.getElementById('addServiceForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    addService();
+                });
+                
+                // Formulário de profissionais
+                document.getElementById('addProfessionalForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    addProfessional();
+                });
+                
+                // Formulário de disponibilidade
+                document.getElementById('availabilityForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    addAvailability();
+                });
+            }
+            
+            function loadDashboardData() {
+                const now = new Date();
+                const today = now.toISOString().split('T')[0];
+                const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+                const services = JSON.parse(localStorage.getItem('services')) || [];
+                const availability = JSON.parse(localStorage.getItem('availability')) || [];
+                
+                // Popula os seletores de filtro
+                populateServiceFilter();
+                populateProfessionalFilter();
+                
+                // Agendamentos de hoje
+                const todayApps = appointments.filter(a => a.data === today);
+                document.getElementById('todayAppointments').textContent = todayApps.length;
+                
+                // Total de serviços
+                document.getElementById('totalServices').textContent = services.length;
+                
+                // Aplica os filtros padrão (mês atual)
+                resetDashboardFilters();
+            }
+            
+            function populateServiceFilter() {
+                const services = JSON.parse(localStorage.getItem('services')) || [];
+                const serviceSelect = document.getElementById('dashboardService');
+                
+                // Limpa opções existentes (exceto a primeira)
+                while (serviceSelect.options.length > 1) {
+                    serviceSelect.remove(1);
+                }
+                
+                // Adiciona cada serviço como uma opção
+                services.forEach(service => {
+                    const option = document.createElement('option');
+                    option.value = service.name;
+                    option.textContent = service.name;
+                    serviceSelect.appendChild(option);
+                });
+            }
+            
+            function populateProfessionalFilter() {
+                const professionals = JSON.parse(localStorage.getItem('professionals')) || [];
+                const professionalSelect = document.getElementById('dashboardProfessional');
+                
+                // Limpa opções existentes (exceto a primeira)
+                while (professionalSelect.options.length > 1) {
+                    professionalSelect.remove(1);
+                }
+                
+                // Adiciona cada profissional como uma opção
+                professionals.forEach(professional => {
+                    const option = document.createElement('option');
+                    option.value = professional.name;
+                    option.textContent = professional.name;
+                    professionalSelect.appendChild(option);
+                });
+            }
+            
+            function applyDashboardFilters() {
+                const dateRange = dateRangeSelect.value;
+                const selectedService = dashboardServiceSelect.value;
+                const selectedProfessional = dashboardProfessionalSelect.value;
+                let startDate, endDate;
+                const now = new Date();
+                
+                // Define o período com base na seleção
+                switch (dateRange) {
+                    case 'thisMonth':
+                        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                        break;
+                    case 'lastMonth':
+                        startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                        endDate = new Date(now.getFullYear(), now.getMonth(), 0);
+                        break;
+                    case 'thisYear':
+                        startDate = new Date(now.getFullYear(), 0, 1);
+                        endDate = new Date(now.getFullYear(), 11, 31);
+                        break;
+                    case 'custom':
+                        startDate = new Date(startDateInput.value);
+                        endDate = new Date(endDateInput.value);
+                        break;
+                }
+                
+                // Formata as datas para YYYY-MM-DD
+                const startDateStr = startDate.toISOString().split('T')[0];
+                const endDateStr = endDate.toISOString().split('T')[0];
+                
+                // Atualiza os dados do dashboard com os filtros aplicados
+                updateDashboardData(startDateStr, endDateStr, selectedService, selectedProfessional);
+                
+                // Adiciona classe para indicar filtros ativos
+                document.querySelectorAll('.filter-group select, .filter-group input').forEach(el => {
+                    el.classList.add('filter-active');
+                });
+                
+                showToast('Filtros aplicados com sucesso!', 'success');
+            }
+            
+            function resetDashboardFilters() {
+                const now = new Date();
+                dateRangeSelect.value = 'thisMonth';
+                customDateRange.style.display = 'none';
+                dashboardServiceSelect.value = 'all';
+                dashboardProfessionalSelect.value = 'all';
+                startDateInput.value = now.toISOString().split('T')[0];
+                endDateInput.value = now.toISOString().split('T')[0];
+                
+                // Remove classe de filtros ativos
+                document.querySelectorAll('.filter-group select, .filter-group input').forEach(el => {
+                    el.classList.remove('filter-active');
+                });
+                
+                // Aplica os filtros padrão (mês atual)
+                applyDashboardFilters();
+            }
+            
+            function updateDashboardData(startDate, endDate, selectedService = 'all', selectedProfessional = 'all') {
+    const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+    const services = JSON.parse(localStorage.getItem('services')) || [];
+    const availability = JSON.parse(localStorage.getItem('availability')) || [];
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Filtra os agendamentos pelo período, serviço e profissional selecionado
+    const filteredApps = appointments.filter(app => {
+        const appDate = app.data;
+        const matchesDate = appDate >= startDate && appDate <= endDate;
+        const matchesService = selectedService === 'all' || app.servico === selectedService;
+        // Corrigido para usar 'profissional' (com dois "s")
+        const professional = app.profissional || "Sem profissional";
+        const matchesProfessional = selectedProfessional === 'all' || professional === selectedProfessional;
+        return matchesDate && matchesService && matchesProfessional;
+    });
+                
+                // Atualiza as estatísticas
+                // Agendamentos de hoje (não afetado pelo filtro de período)
+                const todayApps = appointments.filter(a => a.data === today);
+                document.getElementById('todayAppointments').textContent = todayApps.length;
+                
+                // Total de serviços (não afetado pelo filtro)
+                document.getElementById('totalServices').textContent = services.length;
+                
+                // Faturamento do período filtrado
+                const periodRevenue = filteredApps.reduce((total, app) => total + app.preco, 0);
+                document.getElementById('totalRevenue').textContent = periodRevenue.toFixed(2);
+                
+                // Horários disponíveis no período filtrado
+                const totalSlots = availability.reduce((total, item) => {
+                    const itemDate = item.date;
+                    if (itemDate >= startDate && itemDate <= endDate) {
+                        if (selectedProfessional === 'all' || item.professional === selectedProfessional) {
+                            return total + item.hours.length;
+                        }
+                    }
+                    return total;
+                }, 0);
+                document.getElementById('availableSlots').textContent = totalSlots;
+                
+                // Atualiza as volumetrias
+                updateVolumetries(filteredApps, services);
+                
+                // Atualiza agendamentos recentes (do período filtrado)
+                updateRecentAppointments(filteredApps);
+            }
+            
+            function updateVolumetries(appointments, services) {
+                // Agendamentos por serviço
+                const appointmentsByService = {};
+                let totalAppointments = 0;
+                
+                // Faturamento por serviço
+                const revenueByService = {};
+                let totalRevenue = 0;
+                
+                // Agendamentos por profissional
+                const appointmentsByProfessional = {};
+                
+                // Inicializa os objetos com todos os serviços
+                services.forEach(service => {
+                    appointmentsByService[service.name] = 0;
+                    revenueByService[service.name] = 0;
+                });
+                
+                // Calcula os totais
+                appointments.forEach(app => {
+                    // Por serviço
+                    if (appointmentsByService.hasOwnProperty(app.servico)) {
+                        appointmentsByService[app.servico]++;
+                        revenueByService[app.servico] += app.preco;
+                    } else {
+                        appointmentsByService[app.servico] = 1;
+                        revenueByService[app.servico] = app.preco;
+                    }
+                    
+                    // Por profissional
+                    const professional = app.profissional || "Gabriel Fernandes";
+                    if (appointmentsByProfessional.hasOwnProperty(professional)) {
+                        appointmentsByProfessional[professional]++;
+                    } else {
+                        appointmentsByProfessional[professional] = 1;
+                    }
+                    
+                    totalAppointments++;
+                    totalRevenue += app.preco;
+                });
+                
+                // Atualiza os totais
+                document.getElementById('totalAppointmentsByService').textContent = totalAppointments;
+                document.getElementById('totalRevenueByService').textContent = `R$ ${totalRevenue.toFixed(2)}`;
+                document.getElementById('totalAppointmentsByProfessional').textContent = totalAppointments;
+                
+                // Atualiza a lista de agendamentos por serviço
+                const appointmentsList = document.getElementById('appointmentsByServiceList');
+                appointmentsList.innerHTML = '';
+                
+                for (const [service, count] of Object.entries(appointmentsByService)) {
+                    const item = document.createElement('div');
+                    item.className = 'volumetry-item';
+                    item.innerHTML = `
+                        <span class="volumetry-item-name">${service}</span>
+                        <span class="volumetry-item-value">${count}</span>
+                    `;
+                    appointmentsList.appendChild(item);
+                }
+                
+                // Atualiza a lista de faturamento por serviço
+                const revenueList = document.getElementById('revenueByServiceList');
+                revenueList.innerHTML = '';
+                
+                for (const [service, revenue] of Object.entries(revenueByService)) {
+                    const item = document.createElement('div');
+                    item.className = 'volumetry-item';
+                    item.innerHTML = `
+                        <span class="volumetry-item-name">${service}</span>
+                        <span class="volumetry-item-value">R$ ${revenue.toFixed(2)}</span>
+                    `;
+                    revenueList.appendChild(item);
+                }
+                
+                // Atualiza a lista de agendamentos por profissional
+                const professionalList = document.getElementById('appointmentsByProfessionalList');
+                professionalList.innerHTML = '';
+                
+                for (const [professional, count] of Object.entries(appointmentsByProfessional)) {
+                    const item = document.createElement('div');
+                    item.className = 'volumetry-item';
+                    item.innerHTML = `
+                        <span class="volumetry-item-name">${professional}</span>
+                        <span class="volumetry-item-value">${count}</span>
+                    `;
+                    professionalList.appendChild(item);
+                }
+            }
+            
+            function updateRecentAppointments(appointments) {
+                const recentList = document.getElementById('recentAppointments');
+                recentList.innerHTML = '';
+                
+                if (appointments.length === 0) {
+                    recentList.innerHTML = '<p>Nenhum agendamento encontrado para o período selecionado.</p>';
+                    return;
+                }
+                
+                // Ordena por data mais recente e pega os últimos 5
+                const recentAppointments = appointments
+                    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                    .slice(0, 5);
+                
+                recentAppointments.forEach(app => {
+                    const formattedDate = formatDateForDisplay(app.data);
+                    
+                    const item = document.createElement('div');
+                    item.className = 'appointment-item';
+                    item.innerHTML = `
+                        <div class="appointment-info">
+                            <h4>${app.servico} - R$ ${app.preco.toFixed(2)}</h4>
+                            <p><strong>Cliente:</strong> ${app.nome}</p>
+                            <p><strong>Profissional:</strong> ${app.profissional}</p>
+                            <p><strong>Data:</strong> ${formattedDate} às ${app.horario}</p>
+                            <p><strong>ID:</strong> ${app.id}</p>
+                        </div>
+                    `;
+                    recentList.appendChild(item);
+                });
+            }
+            
+            function formatDateForDisplay(dateString) {
+                if (!dateString) return '';
+                
+                try {
+                    const dateObj = new Date(dateString);
+                    // Ajuste para o fuso horário brasileiro (UTC-3)
+                    const adjustedDate = new Date(dateObj.getTime() + (180 * 60 * 1000));
+                    return adjustedDate.toLocaleDateString('pt-BR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+                } catch (e) {
+                    console.error('Erro ao formatar data:', e);
+                    return dateString;
+                }
+            }
+            
+            async function addService() {
+                const serviceName = document.getElementById('serviceName').value.trim();
+                const servicePrice = parseFloat(document.getElementById('servicePrice').value);
+                const serviceDuration = parseInt(document.getElementById('serviceDuration').value);
+                
+                if (!serviceName || isNaN(servicePrice) || isNaN(serviceDuration)) {
+                    showToast('Preencha todos os campos corretamente!', 'error');
+                    return;
+                }
+                
+                const services = JSON.parse(localStorage.getItem('services')) || [];
+                const newId = services.length > 0 ? Math.max(...services.map(s => s.id)) + 1 : 1;
+                
+                const newService = {
+                    id: newId,
+                    name: serviceName,
+                    price: servicePrice,
+                    duration: serviceDuration
+                };
+                
+                services.push(newService);
+                localStorage.setItem('services', JSON.stringify(services));
+                
+                loadServices();
+                loadDashboardData();
+                document.getElementById('addServiceForm').reset();
+                showToast('Serviço adicionado com sucesso!', 'success');
+            }
+            
+            function loadServices() {
+                const services = JSON.parse(localStorage.getItem('services')) || [];
+                const servicesList = document.getElementById('servicesList');
+                
+                servicesList.innerHTML = '';
+                
+                if (services.length === 0) {
+                    servicesList.innerHTML = '<p>Nenhum serviço cadastrado.</p>';
+                    return;
+                }
+                
+                services.forEach(service => {
+                    const serviceItem = document.createElement('div');
+                    serviceItem.className = 'service-item';
+                    serviceItem.innerHTML = `
+                        <div class="service-info">
+                            <h4>${service.name}</h4>
+                            <p>Duração: ${service.duration} min | Preço: R$ ${service.price.toFixed(2)}</p>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="edit-btn" data-id="${service.id}">Editar</button>
+                            <button class="delete-btn" data-id="${service.id}">Excluir</button>
+                        </div>
+                    `;
+                    servicesList.appendChild(serviceItem);
+                });
+                
+                // Event listeners para botões
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const serviceId = parseInt(this.getAttribute('data-id'));
+                        deleteService(serviceId);
+                    });
+                });
+                
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const serviceId = parseInt(this.getAttribute('data-id'));
+                        editService(serviceId);
+                    });
+                });
+            }
+            
+            async function deleteService(id) {
+                const confirmed = await confirmAction(
+                    'Tem certeza que deseja excluir este serviço? Esta ação não pode ser desfeita.'
+                );
+                
+                if (!confirmed) return;
+                
+                const services = JSON.parse(localStorage.getItem('services')) || [];
+                const updatedServices = services.filter(service => service.id !== id);
+                
+                localStorage.setItem('services', JSON.stringify(updatedServices));
+                loadServices();
+                loadDashboardData();
+                showToast('Serviço excluído com sucesso!', 'success');
+            }
+            
+            async function editService(id) {
+                const services = JSON.parse(localStorage.getItem('services')) || [];
+                const service = services.find(s => s.id === id);
+                
+                if (!service) return;
+                
+                const newName = prompt('Novo nome do serviço:', service.name);
+                if (newName === null) return;
+                
+                const newPrice = parseFloat(prompt('Novo preço:', service.price));
+                if (isNaN(newPrice)) return;
+                
+                const newDuration = parseInt(prompt('Nova duração (minutos):', service.duration));
+                if (isNaN(newDuration)) return;
+                
+                service.name = newName;
+                service.price = newPrice;
+                service.duration = newDuration;
+                
+                localStorage.setItem('services', JSON.stringify(services));
+                loadServices();
+                loadDashboardData();
+                showToast('Serviço atualizado com sucesso!', 'success');
+            }
+            
+            async function addProfessional() {
+    const name = document.getElementById('professionalName').value.trim();
+    
+    if (!name) {
+        showToast('Por favor, insira um nome para o profissional!', 'error');
+        return;
+    }
+    
+    let professionals = JSON.parse(localStorage.getItem('professionals')) || [];
+    
+    // Verificação mais segura se o profissional já existe
+    const professionalExists = professionals.some(p => {
+        // Verifica se p e p.name existem antes de chamar toLowerCase()
+        return p && p.name && p.name.toLowerCase() === name.toLowerCase();
+    });
+    
+    if (professionalExists) {
+        showToast('Já existe um profissional com este nome!', 'error');
+        return;
+    }
+    
+    // Gera um novo ID baseado no maior ID existente + 1
+    const newId = professionals.length > 0 
+        ? Math.max(...professionals.map(p => p.id)) + 1 
+        : 1;
+    
+    const newProfessional = {
+        id: newId,
+        name: name
+    };
+    
+    professionals.push(newProfessional);
+    localStorage.setItem('professionals', JSON.stringify(professionals));
+    
+    // Atualiza a lista de profissionais
+    loadProfessionals();
+    // Atualiza os selects que usam profissionais
+    loadProfessionalOptions();
+    // Atualiza a aba de disponibilidade
+    loadAvailability();
+    
+    // Limpa o formulário
+    document.getElementById('addProfessionalForm').reset();
+    
+    showToast('Profissional adicionado com sucesso!', 'success');
+}
+            
+// Função para carregar profissionais com eventos corrigidos
+// Função para carregar profissionais com eventos corrigidos
+function loadProfessionals() {
+    const professionals = JSON.parse(localStorage.getItem('professionals')) || [];
+    const professionalsList = document.getElementById('professionalsList');
+    
+    professionalsList.innerHTML = '';
+    
+    if (professionals.length === 0) {
+        professionalsList.innerHTML = '<p>Nenhum profissional cadastrado.</p>';
+        return;
+    }
+    
+    professionals.forEach(professional => {
+        const professionalItem = document.createElement('div');
+        professionalItem.className = 'professional-item';
+        professionalItem.innerHTML = `
+            <div class="professional-info">
+                <h4>${professional.name}</h4>
+            </div>
+            <div class="professional-actions">
+                <button class="edit-btn" data-id="${professional.id}">Editar</button>
+                <button class="delete-btn" data-id="${professional.id}">Excluir</button>
+            </div>
+        `;
+        professionalsList.appendChild(professionalItem);
+        
+        // Adiciona event listeners diretamente aos botões recém-criados
+        const deleteBtn = professionalItem.querySelector('.delete-btn');
+        const editBtn = professionalItem.querySelector('.edit-btn');
+        
+        deleteBtn.addEventListener('click', function() {
+            const professionalId = parseInt(this.getAttribute('data-id'));
+            deleteProfessional(professionalId);
+        });
+        
+        editBtn.addEventListener('click', function() {
+            const professionalId = parseInt(this.getAttribute('data-id'));
+            editProfessional(professionalId);
+        });
+    });
+}
+
+// Função para excluir profissional corrigida
+async function deleteProfessional(id) {
+    const confirmed = await confirmAction(
+        'Tem certeza que deseja excluir este profissional? Esta ação removerá todas as disponibilidades e agendamentos associados.'
+    );
+    
+    if (!confirmed) return;
+    
+    let professionals = JSON.parse(localStorage.getItem('professionals')) || [];
+    const professionalIndex = professionals.findIndex(p => p.id === id);
+    
+    if (professionalIndex === -1) {
+        showToast('Profissional não encontrado!', 'error');
+        return;
+    }
+    
+    const professionalToDelete = professionals[professionalIndex];
+    
+    // Remove o profissional
+    professionals.splice(professionalIndex, 1);
+    localStorage.setItem('professionals', JSON.stringify(professionals));
+    
+    // Remove disponibilidades associadas
+    let availability = JSON.parse(localStorage.getItem('availability')) || [];
+    availability = availability.filter(a => a.professional !== professionalToDelete.name);
+    localStorage.setItem('availability', JSON.stringify(availability));
+    
+    // Atualiza agendamentos associados (define como "Sem profissional")
+    let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+    appointments = appointments.map(a => {
+        if (a.professional === professionalToDelete.name) {
+            return {...a, professional: "Sem profissional"};
+        }
+        return a;
+    });
+    localStorage.setItem('appointments', JSON.stringify(appointments));
+    
+    // Atualiza todas as interfaces
+    loadProfessionals();
+    loadProfessionalOptions();
+    loadAvailability();
+    loadAppointments();
+    loadDashboardData();
+    
+    // Atualiza o calendário se estiver visível
+    if (window.calendarInstance) {
+        window.calendarInstance.refetchEvents();
+    }
+    
+    showToast('Profissional excluído com sucesso!', 'success');
+}
+
+// Função para editar profissional corrigida
+async function editProfessional(id) {
+    const professionals = JSON.parse(localStorage.getItem('professionals')) || [];
+    const professionalIndex = professionals.findIndex(p => p.id === id);
+    
+    if (professionalIndex === -1) {
+        showToast('Profissional não encontrado!', 'error');
+        return;
+    }
+    
+    const professional = professionals[professionalIndex];
+    const oldName = professional.name;
+    
+    const newName = prompt('Novo nome do profissional:', professional.name);
+    if (newName === null || newName.trim() === '') return;
+    
+    // Verifica se já existe um profissional com este nome (ignorando o atual)
+    const nameExists = professionals.some(p => 
+        p.id !== id && 
+        p.name && 
+        p.name.toLowerCase() === newName.toLowerCase().trim()
+    );
+    
+    if (nameExists) {
+        showToast('Já existe um profissional com este nome!', 'error');
+        return;
+    }
+    
+    professional.name = newName.trim();
+    
+    // Atualiza o nome em todas as disponibilidades
+    let availability = JSON.parse(localStorage.getItem('availability')) || [];
+    availability = availability.map(a => {
+        if (a.professional === oldName) {
+            return {...a, professional: professional.name};
+        }
+        return a;
+    });
+    localStorage.setItem('availability', JSON.stringify(availability));
+    
+    // Atualiza o nome em todos os agendamentos
+    let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+    appointments = appointments.map(a => {
+        if (a.professional === oldName) {
+            return {...a, professional: professional.name};
+        }
+        return a;
+    });
+    localStorage.setItem('appointments', JSON.stringify(appointments));
+    
+    // Salva a alteração do profissional
+    localStorage.setItem('professionals', JSON.stringify(professionals));
+    
+    // Atualiza todas as interfaces
+    loadProfessionals();
+    loadProfessionalOptions();
+    loadAvailability();
+    loadAppointments();
+    loadDashboardData();
+    
+    // Atualiza o calendário se estiver visível
+    if (window.calendarInstance) {
+        window.calendarInstance.refetchEvents();
+    }
+    
+    showToast('Profissional atualizado com sucesso!', 'success');
+}
+            
+            async function addAvailability() {
+                let date = document.getElementById('availableDate').value;
+                
+                // Corrige o problema do fuso horário (a data estava sendo mostrada um dia antes)
+                if (date) {
+                    const dateObj = new Date(date);
+                    dateObj.setMinutes(dateObj.getMinutes() + dateObj.getTimezoneOffset());
+                    date = dateObj.toISOString().split('T')[0];
+                }
+                
+                const hoursInput = document.getElementById('availableHours').value.trim();
+                const professional = document.getElementById('availableProfessional').value;
+                
+                if (!date || !hoursInput || !professional) {
+                    showToast('Preencha todos os campos corretamente!', 'error');
+                    return;
+                }
+                
+                const hours = hoursInput.split(',')
+                    .map(h => h.trim())
+                    .filter(h => h !== '');
+                
+                if (hours.length === 0) {
+                    showToast('Informe pelo menos um horário válido!', 'error');
+                    return;
+                }
+                
+                const availability = JSON.parse(localStorage.getItem('availability')) || [];
+                const existingDateIndex = availability.findIndex(item => item.date === date && item.professional === professional);
+                
+                if (existingDateIndex !== -1) {
+                    // Adiciona apenas os horários que não existem
+                    const existingHours = availability[existingDateIndex].hours;
+                    const newHours = hours.filter(h => !existingHours.includes(h));
+                    availability[existingDateIndex].hours = [...existingHours, ...newHours].sort();
+                } else {
+                    availability.push({
+                        date,
+                        hours: hours.sort(),
+                        professional
+                    });
+                }
+                
+                localStorage.setItem('availability', JSON.stringify(availability));
+                loadAvailability();
+                loadDashboardData();
+                document.getElementById('availabilityForm').reset();
+                showToast('Disponibilidade adicionada com sucesso!', 'success');
+            }
+            
+            function addTimeInterval() {
+                const startHour = 10; // 10:00
+                const endHour = 20;    // 20:00
+                const interval = 15;   // 45 minutos
+                
+                let hours = [];
+                let currentHour = startHour;
+                
+                while (currentHour < endHour) {
+                    const hour = Math.floor(currentHour);
+                    const minutes = Math.floor((currentHour - hour) * 60);
+                    
+                    const formattedHour = hour.toString().padStart(2, '0');
+                    const formattedMinutes = minutes.toString().padStart(2, '0');
+                    
+                    hours.push(`${formattedHour}:${formattedMinutes}`);
+                    
+                    currentHour += interval / 60;
+                }
+                
+                document.getElementById('availableHours').value = hours.join(', ');
+            }
+            
+            function loadAvailability() {
+                const availability = JSON.parse(localStorage.getItem('availability')) || [];
+                const availabilityList = document.getElementById('availabilityList');
+                
+                availabilityList.innerHTML = '';
+                
+                if (availability.length === 0) {
+                    availabilityList.innerHTML = '<p>Nenhuma disponibilidade cadastrada.</p>';
+                    return;
+                }
+                
+                // Ordena por data e profissional
+                availability.sort((a, b) => {
+                    const dateCompare = new Date(a.date) - new Date(b.date);
+                    if (dateCompare !== 0) return dateCompare;
+                    return a.professional.localeCompare(b.professional);
+                });
+                
+                availability.forEach(item => {
+                    const availabilityItem = document.createElement('div');
+                    availabilityItem.className = 'availability-item';
+                    const formattedDate = formatDateForDisplay(item.date);
+                    
+                    availabilityItem.innerHTML = `
+                        <div>
+                            <p class="availability-date">${formattedDate} - ${item.professional}</p>
+                            <div class="availability-hours">
+                                ${item.hours.map(hour => `<span class="hour-tag">${hour}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="delete-btn" data-date="${item.date}" data-professional="${item.professional}">Excluir</button>
+                        </div>
+                    `;
+                    availabilityList.appendChild(availabilityItem);
+                });
+                
+                document.querySelectorAll('.availability-item .delete-btn').forEach(btn => {
+                    btn.addEventListener('click', async function() {
+                        const date = this.getAttribute('data-date');
+                        const professional = this.getAttribute('data-professional');
+                        const confirmed = await confirmAction('Tem certeza que deseja excluir esta disponibilidade?');
+                        if (confirmed) {
+                            deleteAvailability(date, professional);
+                        }
+                    });
+                });
+            }
+            
+            function deleteAvailability(date, professional) {
+                const availability = JSON.parse(localStorage.getItem('availability')) || [];
+                const updatedAvailability = availability.filter(item => 
+                    !(item.date === date && item.professional === professional)
+                );
+                
+                localStorage.setItem('availability', JSON.stringify(updatedAvailability));
+                loadAvailability();
+                loadDashboardData();
+                showToast('Disponibilidade excluída com sucesso!', 'success');
+            }
+            
+            function loadAppointments() {
+    const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+    const appointmentsList = document.getElementById('appointmentsList');
+    
+    appointmentsList.innerHTML = '';
+    
+    if (appointments.length === 0) {
+        appointmentsList.innerHTML = '<p>Nenhum agendamento realizado.</p>';
+        return;
+    }
+    
+    // Ordena por data/horário
+    appointments.sort((a, b) => {
+        const dateA = new Date(`${a.data}T${a.horario}`);
+        const dateB = new Date(`${b.data}T${b.horario}`);
+        return dateA - dateB;
+    });
+    
+    appointments.forEach(appointment => {
+        const appointmentItem = document.createElement('div');
+        appointmentItem.className = 'appointment-item';
+        const formattedDate = formatDateForDisplay(appointment.data);
+        
+        // Corrigido para usar 'profissional' (com dois "s")
+        const professionalName = appointment.profissional;
+        
+        appointmentItem.innerHTML = `
+            <div class="appointment-info">
+                <h4>${appointment.servico} - R$ ${appointment.preco.toFixed(2)}</h4>
+                <p><strong>Cliente:</strong> ${appointment.nome} - ${appointment.telefone}</p>
+                <p><strong>Profissional:</strong> ${appointment.profissional}</p>
+                <p><strong>Data:</strong> ${formattedDate} às ${appointment.horario}</p>
+                <p><strong>ID:</strong> ${appointment.id}</p>
+            </div>
+            <div class="action-buttons">
+                <button class="delete-btn" data-id="${appointment.id}">Excluir</button>
+            </div>
+        `;
+        appointmentsList.appendChild(appointmentItem);
+    });
+    
+    document.querySelectorAll('.appointment-item .delete-btn').forEach(btn => {
+        btn.addEventListener('click', async function() {
+            const id = this.getAttribute('data-id');
+            const confirmed = await confirmAction('Tem certeza que deseja excluir este agendamento?');
+            if (confirmed) {
+                deleteAppointment(id);
+            }
+        });
+    });
+}
+            
+            function searchAppointments() {
+                const searchTerm = searchAppointmentInput.value.trim().toLowerCase();
+                if (!searchTerm) {
+                    loadAppointments();
+                    return;
+                }
+                
+                const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+                const filteredAppointments = appointments.filter(app => 
+                    app.nome.toLowerCase().includes(searchTerm) || 
+                    app.id.toString().includes(searchTerm)
+                );
+                
+                const appointmentsList = document.getElementById('appointmentsList');
+                appointmentsList.innerHTML = '';
+                
+                if (filteredAppointments.length === 0) {
+                    appointmentsList.innerHTML = '<p>Nenhum agendamento encontrado.</p>';
+                    return;
+                }
+                
+                filteredAppointments.forEach(appointment => {
+                    const appointmentItem = document.createElement('div');
+                    appointmentItem.className = 'appointment-item';
+                    const formattedDate = formatDateForDisplay(appointment.data);
+                    
+                    appointmentItem.innerHTML = `
+                        <div class="appointment-info">
+                            <h4>${appointment.servico} - R$ ${appointment.preco.toFixed(2)}</h4>
+                            <p><strong>Cliente:</strong> ${appointment.nome} (${appointment.telefone})</p>
+                            <p><strong>Profissional:</strong> ${appointment.profissional}</p>
+                            <p><strong>Data:</strong> ${formattedDate} às ${appointment.horario}</p>
+                            <p><strong>ID:</strong> ${appointment.id}</p>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="delete-btn" data-id="${appointment.id}">Excluir</button>
+                        </div>
+                    `;
+                    appointmentsList.appendChild(appointmentItem);
+                });
+                
+                document.querySelectorAll('.appointment-item .delete-btn').forEach(btn => {
+                    btn.addEventListener('click', async function() {
+                        const id = this.getAttribute('data-id');
+                        const confirmed = await confirmAction('Tem certeza que deseja excluir este agendamento?');
+                        if (confirmed) {
+                            deleteAppointment(id);
+                        }
+                    });
+                });
+            }
+            
+            async function deleteAppointment(id) {
+    const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+    const appointmentToDelete = appointments.find(a => a.id === id);
+    const updatedAppointments = appointments.filter(a => a.id !== id);
+    
+    localStorage.setItem('appointments', JSON.stringify(updatedAppointments));
+    
+    // Atualiza todas as visualizações
+    loadAppointments();
+    loadDashboardData();
+    
+    // Atualiza o calendário se estiver visível
+    if (window.calendarInstance) {
+        window.calendarInstance.refetchEvents();
+    }
+    
+    showToast('Agendamento excluído com sucesso!', 'success');
+    
+    // Restaura o horário na disponibilidade
+    if (appointmentToDelete) {
+        restoreAvailabilitySlot(
+            appointmentToDelete.data, 
+            appointmentToDelete.horario, 
+            // Corrigido para usar 'profissional' (com dois "s")
+            appointmentToDelete.profissional || "Sem profissional"
+        );
+    }
+}
+            
+function restoreAvailabilitySlot(date, hour, professional = "Sem profissional") {
+    const availability = JSON.parse(localStorage.getItem('availability')) || [];
+    const dateAvailability = availability.find(item => 
+        item.date === date && item.professional === professional
+    );
+    
+    if (dateAvailability) {
+        if (!dateAvailability.hours.includes(hour)) {
+            dateAvailability.hours.push(hour);
+            dateAvailability.hours.sort();
+        }
+    } else {
+        availability.push({
+            date: date,
+            hours: [hour],
+            professional: professional
+        });
+    }
+    
+    localStorage.setItem('availability', JSON.stringify(availability));
+}
+            
+            function initCalendar() {
+    const calendarEl = document.getElementById('calendar');
+    const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+    
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'pt-br',
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: appointments.map(appointment => {
+            // Corrigido para usar 'profissional' (com dois "s")
+            const professionalName = appointment.profissional || "Sem profissional";
+            return {
+                title: `${appointment.servico} - ${appointment.nome} (${professionalName})`,
+                start: `${appointment.data}T${appointment.horario}`,
+                extendedProps: {
+                    phone: appointment.telefone,
+                    price: appointment.preco,
+                    id: appointment.id,
+                    service: appointment.servico,
+                    client: appointment.nome,
+                    time: appointment.horario,
+                    date: appointment.data,
+                    professional: professionalName
+                }
+            };
+        }),
+                    eventClick: function(info) {
+                        const event = info.event;
+                        const formattedDate = formatDateForDisplay(event.extendedProps.date);
+                        
+                        showAppointmentModal({
+                            title: `${event.extendedProps.service} - ${event.extendedProps.client}`,
+                            professional: event.extendedProps.professional,
+                            date: `${formattedDate} às ${event.extendedProps.time}`,
+                            phone: event.extendedProps.phone,
+                            price: event.extendedProps.price,
+                            id: event.extendedProps.id
+                        });
+                    },
+                    eventContent: function(arg) {
+                        return {
+                            html: `
+                                <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    <span class="fc-event-time">${arg.timeText}</span>
+                                    <span class="fc-event-title" style="display:none;"> - ${arg.event.title}</span>
+                                </div>
+                            `
+                        };
+                    },
+                    dayMaxEventRows: 3,
+                    dayCellContent: function(e) {
+                        return { html: e.dayNumberText.replace('a', '') };
+                    }
+                });
+                
+                calendar.render();
+                window.calendarInstance = calendar;
+            }
+            
+            // Modal de detalhes do agendamento
+            function showAppointmentModal(details) {
+                const modal = document.createElement('div');
+                modal.className = 'action-modal';
+                modal.innerHTML = `
+                    <div class="modal-content" style="max-width: 500px;">
+                        <h3 style="margin-bottom: 1rem; color: var(--text-color);">Detalhes do Agendamento</h3>
+                        <div style="text-align: left; margin-bottom: 1.5rem;">
+                            <p><strong>Serviço:</strong> ${details.title.split(' - ')[0]}</p>
+                            <p><strong>Cliente:</strong> ${details.title.split(' - ')[1]}</p>
+                            <p><strong>Profissional:</strong> ${details.professional}</p>
+                            <p><strong>Data/Horário:</strong> ${details.date}</p>
+                            <p><strong>Telefone:</strong> ${details.phone}</p>
+                            <p><strong>Valor:</strong> R$ ${details.price.toFixed(2)}</p>
+                            <p><strong>ID:</strong> ${details.id}</p>
+                        </div>
+                        <div class="modal-buttons">
+                            <button class="btn btn-secondary" id="closeModalBtn">Fechar</button>
+                            <button class="btn btn-delete" id="deleteAppointmentBtn" data-id="${details.id}">Excluir</button>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                document.getElementById('closeModalBtn').addEventListener('click', () => {
+                    modal.remove();
+                });
+                
+                document.getElementById('deleteAppointmentBtn').addEventListener('click', async () => {
+                    const confirmed = await confirmAction('Tem certeza que deseja excluir este agendamento?');
+                    if (confirmed) {
+                        deleteAppointment(details.id);
+                        modal.remove();
+                    }
+                });
+            }
+            
+            // Função para mostrar notificações
+            function showToast(message, type = 'success') {
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.animation = 'fadeOut 0.5s forwards';
+                    setTimeout(() => toast.remove(), 500);
+                }, 2500);
+            }
+            
+            // Função para confirmar ações
+            function confirmAction(message = 'Tem certeza que deseja realizar esta ação?') {
+                return new Promise((resolve) => {
+                    const modal = document.createElement('div');
+                    modal.className = 'action-modal';
+                    modal.innerHTML = `
+                        <div class="modal-content">
+                            <p>${message}</p>
+                            <div class="modal-buttons">
+                                <button class="btn btn-cancel">Cancelar</button>
+                                <button class="btn btn-confirm">Confirmar</button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(modal);
+                    
+                    modal.querySelector('.btn-cancel').addEventListener('click', () => {
+                        modal.remove();
+                        resolve(false);
+                    });
+                    
+                    modal.querySelector('.btn-confirm').addEventListener('click', () => {
+                        modal.remove();
+                        resolve(true);
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
